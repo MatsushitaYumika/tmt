@@ -240,7 +240,7 @@ void UpdatePause(void)
 	{
 		if (g_pause[nCntPause].bColUse == false)
 		{
-			//頂点カラーの設定
+			//頂点カラーの設定(false時)
 			pVtx[0].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 100);
 			pVtx[1].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 100);
 			pVtx[2].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 100);
@@ -248,7 +248,7 @@ void UpdatePause(void)
 		}
 		if (g_pause[nCntPause].bColUse == true)
 		{
-			//頂点カラーの設定
+			//頂点カラーの設定(true時)
 			pVtx[0].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, POLYGON_COL);
 			pVtx[1].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, POLYGON_COL);
 			pVtx[2].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, POLYGON_COL);
