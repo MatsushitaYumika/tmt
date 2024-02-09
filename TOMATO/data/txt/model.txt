@@ -1,0 +1,89 @@
+#==============================================================================
+# 持てるModelの読み込みファイル[model.txt]
+# Author : Yumika Matsushita
+#==============================================================================
+SCRIPT			
+
+NUM_MODEL = 7
+
+MODEL_FILENAME = data/MODEL/ball_none.x		
+MODEL_FILENAME = data/MODEL/ball_red.x		
+MODEL_FILENAME = data/MODEL/ball_bule.x		
+MODEL_FILENAME = data/MODEL/ball_green.x	
+MODEL_FILENAME = data/MODEL/doll_red.x		
+MODEL_FILENAME = data/MODEL/doll_bule.x		
+MODEL_FILENAME = data/MODEL/tumiki.x	
+
+
+MODELSET
+	TYPE = 0			
+	XPOS = -600.0		
+	YPOS = 0.0			
+	ZPOS = -600.0			
+	XROT = 0.0			
+	YROT = 0.0			
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 1			
+	XPOS = -330.0		
+	YPOS = 0.0			
+	ZPOS = 200.0			
+	XROT = 0.0			
+	YROT = 0.0			
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 2			
+	XPOS = 250.0		
+	YPOS = 0.0			
+	ZPOS = -150.0			
+	XROT = 0.0			
+	YROT = 0.0			
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 3			
+	XPOS = -150.0		
+	YPOS = 0.0			
+	ZPOS = 300.0			
+	XROT = 0.0			
+	YROT = 0.0			
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 4			
+	XPOS = 150.0		
+	YPOS = 0.0			
+	ZPOS = -100.0			
+	XROT = 0.0			
+	YROT = 1.57			
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 5			
+	XPOS = -200.0		
+	YPOS = 0.0			
+	ZPOS = -200.0			
+	XROT = 0.0			
+	YROT = 0.0			
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 6			
+	XPOS = -300.0		
+	YPOS = 0.0			
+	ZPOS = -350.0			
+	XROT = 0.0			
+	YROT = 0.0			
+	ZROT = 0.0			
+END_MODELSET
+
+
+END_SCRIPT		# この行は絶対消さないこと！

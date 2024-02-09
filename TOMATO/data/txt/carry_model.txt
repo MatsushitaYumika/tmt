@@ -1,0 +1,87 @@
+#==============================================================================
+# 持てないModelの読み込みファイル[carry_model.txt]
+# Author : Yumika Matsushita
+#==============================================================================
+SCRIPT			# この行は絶対消さないこと！
+
+NUM_MODEL = 8
+
+MODEL_FILENAME = data/MODEL/toybox_red.x 	
+MODEL_FILENAME = data/MODEL/house_red.x 	
+MODEL_FILENAME = data/MODEL/house_bule.x	
+MODEL_FILENAME = data/MODEL/doll_black.x	
+MODEL_FILENAME = data/MODEL/doll_white.x	
+MODEL_FILENAME = data/MODEL/kitchen.x		
+MODEL_FILENAME = data/MODEL/trampoline.x	
+
+MODELSET
+	TYPE = 0			
+	XPOS = 0.0		
+	YPOS = 0.0			
+	ZPOS = 50.0		
+	XROT = 0.0			
+	YROT = 3.14	
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 1			
+	XPOS = -300.0		
+	YPOS = 0.0			
+	ZPOS = 350.0		
+	XROT = 0.0			
+	YROT = 3.14
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 2			
+	XPOS = 300.0		
+	YPOS = 0.0			
+	ZPOS = 350.0		
+	XROT = 0.0			
+	YROT = 3.14			
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 3			
+	XPOS = 380.0		
+	YPOS = 0.0			
+	ZPOS = 0.0			
+	XROT = 0.0			
+	YROT = 3.14		
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 4			
+	XPOS = -380.0		
+	YPOS = 0.0			
+	ZPOS = 0.0			
+	XROT = 0.0			
+	YROT = 0.0		
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 5			
+	XPOS = 0.0		
+	YPOS = 0.0			
+	ZPOS = 340.0			
+	XROT = 0.0			
+	YROT = 0.0			
+	ZROT = 0.0			
+END_MODELSET
+
+MODELSET
+	TYPE = 6			
+	XPOS = 0.0		
+	YPOS = 20.0			
+	ZPOS = -250.0			
+	XROT = 0.0			
+	YROT = 0.0			
+	ZROT = 0.0			
+END_MODELSET
+
+END_SCRIPT		# この行は絶対消さないこと！
