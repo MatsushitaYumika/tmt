@@ -30,6 +30,7 @@ LPDIRECT3DTEXTURE9	g_pTexturePause[MAX_POLYGON] = {};	//テクスチャへのポインタ
 LPDIRECT3DVERTEXBUFFER9	g_pVtxBuffPause = NULL;	//頂点バッファへのポインタ
 Pause g_pause[MAX_POLYGON];
 int nCntPauseCol = 100;
+int g_nCntChoose = 0;
 
 //=====================================
 //初期化処理
@@ -97,6 +98,7 @@ void InitPause(void)
 	}
 
 	nCntPauseCol = 100;
+	g_nCntChoose = 0;
 
 	//テクスチャの読み込み
 	D3DXCreateTextureFromFile(pDevice,
@@ -205,8 +207,6 @@ void UninitPause(void)
 //=====================================
 void UpdatePause(void)
 {
-	int nCnt;
-
 	VERTEX_2D* pVtx;	//頂点情報へのポインタ
 
 	//頂点バッファをロックし、頂点情報へのポインタを取得
@@ -214,6 +214,38 @@ void UpdatePause(void)
 
 	for (int nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
 	{
+		g_pause[nCntPause].bColUse = false;
+	}
+
+	if (GetKeyboardTrigger(DIK_UP) == true || GetJoyPadPress(JOYKEY_RIGHT) == true)
+	{
+		g_nCntChoose--;
+	}
+	if (GetKeyboardTrigger(DIK_DOWN) == true || GetJoyPadPress(JOYKEY_LEFT) == true)
+	{
+		g_nCntChoose++;
+	}
+	if (g_nCntChoose <= -1)
+	{
+		g_nCntChoose = 2;
+	}
+	if (g_nCntChoose >= 3)
+	{
+		g_nCntChoose = 0;
+	}
+
+	g_pause[g_nCntChoose].bColUse = true;
+
+	for (int nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
+	{
+		if (g_pause[nCntPause].bColUse == false)
+		{
+			//頂点カラーの設定
+			pVtx[0].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 100);
+			pVtx[1].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 100);
+			pVtx[2].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 100);
+			pVtx[3].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 100);
+		}
 		if (g_pause[nCntPause].bColUse == true)
 		{
 			//頂点カラーの設定
@@ -222,33 +254,8 @@ void UpdatePause(void)
 			pVtx[2].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, POLYGON_COL);
 			pVtx[3].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, POLYGON_COL);
 		}
-		else
-		{
-			//頂点カラーの設定
-			pVtx[0].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 100);
-			pVtx[1].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 100);
-			pVtx[2].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 100);
-			pVtx[3].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 100);
-		}
 
 		pVtx += 4;
-	}
-
-	if (GetKeyboardTrigger(DIK_UP) == true || GetJoyPadPress(JOYKEY_RIGHT) == true)
-	{
-		g_pause[0].bColUse = true;
-
-		if (g_pause[0].bColUse == true)
-		{
-			if (GetKeyboardTrigger(DIK_DOWN) == true || GetJoyPadPress(JOYKEY_LEFT) == true)
-			{
-				g_pause[0].bColUse = false;
-			}
-		}
-	}
-	if (GetKeyboardTrigger(DIK_DOWN) == true || GetJoyPadPress(JOYKEY_LEFT) == true)
-	{
-
 	}
 
 	//頂点バッファをアンロックする
