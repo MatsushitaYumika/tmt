@@ -10,7 +10,8 @@
 #include "main.h"	//Windowsアプリケーション内の宣言の複合体
 #include "input.h"	//キーボードの宣言の複合体
 #include "Pause.h"	//ゲーム画面の宣言の複合体
-#include "fade.h"
+#include <player.h>
+//#include "fade.h"
 
 //=====================================
 //マクロ定義
@@ -20,6 +21,7 @@
 #define POLYGON_HEIGHT	(100.0f)	//ポリゴンの縦の長さ
 #define Brightness_POLYGON	(51)	//ポリゴンの明るさ
 #define POLYGON_COL (255)			//ポリゴンのカラー
+#define MAX_PL	(4)	//プレイヤーの最大数
 
 //=====================================
 //グローバル変数
@@ -258,25 +260,31 @@ void UpdatePause(void)
 		pVtx += 4;
 	}
 
-	if (g_pause[0].bColUse == true)
+	for (int nCntPause = 0; nCntPause < MAX_PL; nCntPause++)
 	{
-		if (GetJoypadTrigger(JOYKEY_A,0) == true)
+		if (g_pause[0].bColUse == true)
 		{
-			SetFade(MODE_GAME);
+			if (GetJoypadTrigger(JOYKEY_A, nCntPause) == true)
+			{
+				// ゲーム画面に戻る処理してください
+				//SetFade(MODE_GAME);
+			}
 		}
-	}
-	if (g_pause[1].bColUse == true)
-	{
-		if (GetJoypadTrigger(JOYKEY_A,0) == true)
+		if (g_pause[1].bColUse == true)
 		{
-			SetFade(MODE_TUTORIAL);
+			if (GetJoypadTrigger(JOYKEY_A, nCntPause) == true)
+			{
+				// チュートリアル画面に戻る処理してください
+				//SetFade(MODE_TUTORIAL);
+			}
 		}
-	}
-	if (g_pause[2].bColUse == true)
-	{
-		if (GetJoypadTrigger(JOYKEY_A,0) == true)
+		if (g_pause[2].bColUse == true)
 		{
-			SetFade(MODE_TITLE);
+			if (GetJoypadTrigger(JOYKEY_A, nCntPause) == true)
+			{
+				// タイトル画面に戻る処理してください
+				//SetFade(MODE_TITLE);
+			}
 		}
 	}
 
