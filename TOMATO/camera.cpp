@@ -69,7 +69,7 @@ void UpdateCamera()
 	Player* pPlayer = GetPlayer();	//プレイヤー情報のポインタ
 
 	//カメラ平行移動(Dまで同じ)
-	if (GetKeyboardPress(DIK_UP) == true || GetJoyPadPress(JOYKEY_UP) == true)
+	if (GetKeyboardPress(DIK_UP) == true)
 	{//↑キーが押された
 		g_camera.posV.y += 3.0f;
 		g_camera.posR.y += 3.0f;
@@ -88,7 +88,7 @@ void UpdateCamera()
 		//	g_player.move.y += cosf(-D3DX_PI * 0.75) * MOVE_MIN_LONG;*/
 		//}
 	}
-	if (GetKeyboardPress(DIK_LEFT) == true || GetJoyPadPress(JOYKEY_LEFT) == true)
+	if (GetKeyboardPress(DIK_LEFT) == true)
 	{//←キーが押された
 		g_camera.posV.x -= 3.0f;
 		//g_camera.posR.x -= 3.0f;
@@ -107,7 +107,7 @@ void UpdateCamera()
 		//	g_player.move.y += cosf(-D3DX_PI * 0.25) * MOVE_MIN_LONG;*/
 		//}
 	}
-	if (GetKeyboardPress(DIK_DOWN) == true || GetJoyPadPress(JOYKEY_DOWN) == true)
+	if (GetKeyboardPress(DIK_DOWN) == true)
 	{//↓キーが押された
 		g_camera.posV.y -= 3.0f;
 		g_camera.posR.y -= 3.0f;
@@ -126,7 +126,7 @@ void UpdateCamera()
 		//	g_player.move.y += cosf(D3DX_PI * 1.0) * MOVE_MIN_LONG;*/
 		//}
 	}
-	if (GetKeyboardPress(DIK_RIGHT) == true || GetJoyPadPress(JOYKEY_RIGHT) == true)
+	if (GetKeyboardPress(DIK_RIGHT) == true)
 	{//→キーが押された
 		g_camera.posV.x += 3.0f;
 		//g_camera.posR.x += 3.0f;

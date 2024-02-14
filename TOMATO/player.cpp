@@ -237,7 +237,7 @@ void UpdatePlayer()
 		g_Player.move.z = cosf(pCamera->rot.y * -D3DX_PI) * MAX_SPEED;
 		g_Player.rot.y = ((pCamera->rot.y * -D3DX_PI) - (pCamera->rot.y * D3DX_PI)) * 0.5f;
 
-		if (GetKeyboardPress(DIK_A) == true || GetJoyPadPress(JOYKEY_LEFT) == true)
+		if (GetKeyboardPress(DIK_A) == true)
 		{//¶ãˆÚ“®
 			//g_Player.move.x = sinf(pCamera->rot.y * -D3DX_PI + (D3DX_PI / 2)) * -MAX_SPEED;
 			//g_Player.move.z = cosf(pCamera->rot.y * -D3DX_PI + (D3DX_PI / 2)) * -MAX_SPEED;
@@ -250,7 +250,7 @@ void UpdatePlayer()
 		g_Player.move.z = cosf(pCamera->rot.y * -D3DX_PI + (D3DX_PI / 2)) * -MAX_SPEED;
 		g_Player.rot.y = ((pCamera->rot.y * D3DX_PI + (D3DX_PI / 2)) + (pCamera->rot.y * D3DX_PI + (D3DX_PI / 2))) * -0.5f;
 
-		if (GetKeyboardPress(DIK_S) == true || GetJoyPadPress(JOYKEY_DOWN) == true)
+		if (GetKeyboardPress(DIK_S) == true )
 		{//¶‰ºˆÚ“®
 		/*	g_Player.move.x = sinf(pCamera->rot.y * -D3DX_PI + (D3DX_PI / 2)) * -MAX_SPEED;
 			g_Player.move.z = cosf(pCamera->rot.y * -D3DX_PI) * -MAX_SPEED;
@@ -267,7 +267,7 @@ void UpdatePlayer()
 		g_Player.move.z = cosf(pCamera->rot.y * -D3DX_PI) * -MAX_SPEED;
 		g_Player.rot.y = ((pCamera->rot.y * D3DX_PI + (-D3DX_PI)) + (pCamera->rot.y * D3DX_PI + (-D3DX_PI))) * -0.5f;
 
-		if (GetKeyboardPress(DIK_D) == true || GetJoyPadPress(JOYKEY_RIGHT) == true)
+		if (GetKeyboardPress(DIK_D) == true )
 		{//‰E‰ºˆÚ“®
 		/*	g_Player.move.x = sinf(pCamera->rot.y * -D3DX_PI + (-D3DX_PI / 2)) * -MAX_SPEED;
 			g_Player.move.z = cosf(pCamera->rot.y * -D3DX_PI + (-D3DX_PI / 2)) * -MAX_SPEED;*/
@@ -284,7 +284,7 @@ void UpdatePlayer()
 		g_Player.move.z = cosf(pCamera->rot.y * -D3DX_PI + (-D3DX_PI / 2)) * -MAX_SPEED;
 		g_Player.rot.y = ((pCamera->rot.y * D3DX_PI + (-D3DX_PI / 2)) + (pCamera->rot.y * D3DX_PI + (-D3DX_PI / 2))) * -0.5f;
 
-		if (GetKeyboardPress(DIK_W) == true || GetJoyPadPress(JOYKEY_UP) == true)
+		if (GetKeyboardPress(DIK_W) == true )
 		{//‰EãˆÚ“®
 		/*	g_Player.move.x = sinf(pCamera->rot.y * -D3DX_PI + (-D3DX_PI / 2)) * -MAX_SPEED;
 			g_Player.move.z = cosf(pCamera->rot.y * -D3DX_PI) * MAX_SPEED;

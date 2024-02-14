@@ -297,7 +297,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)	//TRUE:ウィンドウ/FAL
 	}
 
 	//ジョイパットの初期化処理
-	if (FAILED(InitJoyPad()))
+	if (FAILED(InitJoypad()))
 	{
 		return E_FAIL;
 	}
@@ -349,10 +349,10 @@ void Uninit(void)
 	//UninitGame();
 
 	//キーボードの終了処理
-	UninitKeyboard();
+	UnInitKeyboard();
 
 	//ジョイパットの終了処理
-	UninitJoyPad();
+	UninitJoypad();
 
 	//フェードの終了処理
 	UninitFade();
@@ -394,7 +394,7 @@ void Update(void)
 	UpdateKeyboard();
 
 	//ジョイパットの更新処理
-	UpdateJoyPad();
+	UpdateJoypad();
 
 	switch (g_mode)
 	{

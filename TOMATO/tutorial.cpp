@@ -125,11 +125,11 @@ void UpdateTutorial(void)
 	////頂点バッファをロックし、頂点情報へのポインタを取得
 	//g_pVtxBuffTutorial->Lock(0, 0, (void**)&pVtx, 0);
 
-	if (GetKeyboardTrigger(DIK_RIGHT) == true || GetJoyPadPress(JOYKEY_RIGHT) == true)
+	if (GetKeyboardTrigger(DIK_RIGHT) == true )
 	{
 		g_nCntTutorial = 1;
 	}
-	if (GetKeyboardTrigger(DIK_LEFT) == true || GetJoyPadPress(JOYKEY_LEFT) == true)
+	if (GetKeyboardTrigger(DIK_LEFT) == true )
 	{
 		g_nCntTutorial = 0;
 	}

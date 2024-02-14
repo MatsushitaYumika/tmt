@@ -43,7 +43,7 @@ void InitPause(void)
 
 	//テクスチャの読み込み
 	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\maxresdefault.jpg",
+		"data\\TEXTURE\\pause.png",
 		&g_pTexturePauseBG);
 
 	//頂点バッファの生成
@@ -73,10 +73,10 @@ void InitPause(void)
 	pVtx[3].rhw = 1.0f;
 
 	//頂点カラーの設定
-	pVtx[0].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, POLYGON_COL);
-	pVtx[1].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, POLYGON_COL);
-	pVtx[2].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, POLYGON_COL);
-	pVtx[3].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, POLYGON_COL);
+	pVtx[0].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 120);
+	pVtx[1].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 120);
+	pVtx[2].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 120);
+	pVtx[3].col = D3DCOLOR_RGBA(POLYGON_COL, POLYGON_COL, POLYGON_COL, 120);
 
 	//テスチャ座標の設定
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
@@ -217,11 +217,11 @@ void UpdatePause(void)
 		g_pause[nCntPause].bColUse = false;
 	}
 
-	if (GetKeyboardTrigger(DIK_UP) == true || GetJoyPadPress(JOYKEY_RIGHT) == true)
+	if (GetKeyboardTrigger(DIK_UP) == true || GetJoypadTrigger(JOYKEY_UP,0) == true)
 	{
 		g_nCntChoose--;
 	}
-	if (GetKeyboardTrigger(DIK_DOWN) == true || GetJoyPadPress(JOYKEY_LEFT) == true)
+	if (GetKeyboardTrigger(DIK_DOWN) == true || GetJoypadTrigger(JOYKEY_DOWN,0) == true)
 	{
 		g_nCntChoose++;
 	}
@@ -256,6 +256,28 @@ void UpdatePause(void)
 		}
 
 		pVtx += 4;
+	}
+
+	if (g_pause[0].bColUse == true)
+	{
+		if (GetJoypadTrigger(JOYKEY_A,0) == true)
+		{
+			SetFade(MODE_GAME);
+		}
+	}
+	if (g_pause[1].bColUse == true)
+	{
+		if (GetJoypadTrigger(JOYKEY_A,0) == true)
+		{
+			SetFade(MODE_TUTORIAL);
+		}
+	}
+	if (g_pause[2].bColUse == true)
+	{
+		if (GetJoypadTrigger(JOYKEY_A,0) == true)
+		{
+			SetFade(MODE_TITLE);
+		}
 	}
 
 	//頂点バッファをアンロックする
