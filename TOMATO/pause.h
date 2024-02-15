@@ -39,5 +39,6 @@ void UninitPause(void);
 void UpdatePause(void);
 void DrawPause(void);
 void SetPause(D3DXVECTOR3 pos);
+void SetPauseMenu(D3DXVECTOR3 pos);
 
 #endif
