@@ -326,7 +326,10 @@ void UpdatePause(void)
 //=====================================
 void DrawPause(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスへのポインタ
+//==============================================================================================
+//ここから下の区切りまで背景の処理
+
+	LPDIRECT3DDEVICE9 pDevice = GetDevice();		//デバイスへのポインタ
 
 	//頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, g_pVtxBuffPauseBG, 0, sizeof(VERTEX_2D));
@@ -340,26 +343,28 @@ void DrawPause(void)
 	//ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 
-	//==============================================================================================
-
-		//頂点バッファをデータストリームに設定
+//==============================================================================================
+//ここから下まで背景の処理
+	
+	//頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, g_pVtxBuffPause, 0, sizeof(VERTEX_2D));
 
 	//頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
+	//選択できるポリゴンの最大数分回してます
 	for (int nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
 	{
 		//テクスチャの設定
-		pDevice->SetTexture(0, g_pTexturePause[nCntPause]);
+		pDevice->SetTexture(0, g_pTexturePause[nCntPause]);		//テクスチャ三個分あります
 
 		//ポリゴンの描画
-		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, nCntPause * 4, 2);
+		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, nCntPause * 4, 2);		//ポリゴン三つ分あります
 	}
 }
 
 //=====================================
-//設定処理
+//選択できるポリゴンの設定処理
 //=====================================
 void SetPause(D3DXVECTOR3 pos)
 {
@@ -368,6 +373,7 @@ void SetPause(D3DXVECTOR3 pos)
 	//頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffPause->Lock(0, 0, (void**)&pVtx, 0);
 
+	//選択できるポリゴンの最大数分回してます
 	for (int nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
 	{
 		if (g_pause[nCntPause].bUse == false)
