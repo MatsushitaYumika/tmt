@@ -36,6 +36,17 @@ typedef struct
 }PauseMN;
 
 //=====================================
+//ポーズ画面の矢印(select)ポリゴンの構造体
+//=====================================
+typedef struct
+{
+	D3DXVECTOR3 pos;	//動き(普通)
+	int nType;			//モードの種類
+	bool bUse;			//使用の有無
+	bool bColUse;		//ポリゴンのカラーの有無
+}PauseSL;
+
+//=====================================
 //マクロ定義
 //=====================================
 
@@ -49,5 +60,6 @@ void UpdatePause(void);
 void DrawPause(void);
 void SetPause(D3DXVECTOR3 pos);
 void SetPauseMenu(D3DXVECTOR3 pos);
+void SetPauseSelect(D3DXVECTOR3 pos);
 
 #endif

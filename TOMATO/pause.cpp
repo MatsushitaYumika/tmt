@@ -16,14 +16,16 @@
 //マクロ定義
 //=====================================
 #define MAX_POLYGON			(3)			//ポリゴンの最大数
-#define POLYGON_WIDTH		(150.0f)	//選択出来るやつのポリゴンの横の長さ
-#define POLYGON_HEIGHT		(100.0f)	//選択出来るやつのポリゴンの縦の長さ
+#define POLYGON_WIDTH		(300.0f)	//選択出来るやつのポリゴンの横の長さ
+#define POLYGON_HEIGHT		(200.0f)	//選択出来るやつのポリゴンの縦の長さ
 #define Brightness_POLYGON	(51)		//ポリゴンの明るさ
 #define POLYGON_MAXCOL		(255)		//ポリゴンの不透明度(255)
 #define POLYGON_COL			(100)		//ポリゴンの不透明度(100)
-#define MNPOLYGON_WIDTH		(300.0f)	//操作方法のポリゴンの縦の長さ
-#define MNPOLYGON_HEIGHT	(400.0f)	//操作方法のポリゴンの横の長さ
+#define MNPOLYGON_WIDTH		(400.0f)	//操作方法のポリゴンの縦の長さ
+#define MNPOLYGON_HEIGHT	(700.0f)	//操作方法のポリゴンの横の長さ
 #define MAX_PL				(4)			//プレイヤーの最大人数
+#define SLPOLYGON_WIDTH		(100.0f)	//矢印のポリゴンの横の長さ
+#define SLPOLYGON_HEIGHT	(100.0f)	//矢印のポリゴンの縦の長さ
 
 //=====================================
 //グローバル変数
@@ -37,6 +39,12 @@ LPDIRECT3DVERTEXBUFFER9	g_pVtxBuffPauseBG = NULL;		//頂点バッファへのポインタ
 LPDIRECT3DTEXTURE9	g_pTexturePauseMN = NULL;			//テクスチャへのポインタ
 LPDIRECT3DVERTEXBUFFER9	g_pVtxBuffPauseMN = NULL;		//頂点バッファへのポインタ
 PauseMN g_pauseMN;										//操作方法のポリゴンの構造体
+
+//矢印(SL = select)
+LPDIRECT3DTEXTURE9	g_pTexturePauseSL[MAX_POLYGON] = {};//テクスチャへのポインタ
+LPDIRECT3DVERTEXBUFFER9	g_pVtxBuffPauseSL = NULL;		//頂点バッファへのポインタ
+PauseSL g_pauseSL[MAX_POLYGON];							//矢印ポリゴンの構造体
+int g_nCntChooseSL = 0;									//選択されたポリゴンを光らせる為のカウント
 
 //選択できるやつ
 LPDIRECT3DTEXTURE9	g_pTexturePause[MAX_POLYGON] = {};	//テクスチャへのポインタ
@@ -148,10 +156,79 @@ void InitPause(void)
 	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 
 	//操作方法のポリゴン設置
-	SetPauseMenu(D3DXVECTOR3(900.0f, 300.0f, 0.0f));
+	SetPauseMenu(D3DXVECTOR3(1400.0f, 200.0f, 0.0f));
 
 	//頂点バッファをアンロックする
 	g_pVtxBuffPauseMN->Unlock();
+
+//==========================================================================================
+//ここから下までは矢印のポリゴンの処理
+
+	for (nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
+	{
+		g_pauseSL[nCntPause].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_pauseSL[nCntPause].nType = 0;
+		g_pauseSL[nCntPause].bUse = false;
+		g_pauseSL[nCntPause].bColUse = false;
+	}
+
+
+	for (nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
+	{
+		//テクスチャの読み込み
+		D3DXCreateTextureFromFile(pDevice,
+			"data\\TEXTURE\\pause_select.png",
+			&g_pTexturePauseSL[nCntPause]);
+	}
+
+	//頂点バッファの生成
+	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4 * MAX_POLYGON,
+		D3DUSAGE_WRITEONLY,
+		FVF_VERTEX_2D,
+		D3DPOOL_MANAGED,
+		&g_pVtxBuffPauseSL,
+		NULL);
+
+	//頂点バッファをロックし、頂点情報へのポインタを取得
+	g_pVtxBuffPauseSL->Lock(0, 0, (void**)&pVtx, 0);
+
+	for (nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
+	{
+		//頂点座標の設定
+		pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+		//rhwの設定
+		pVtx[0].rhw = 1.0f;
+		pVtx[1].rhw = 1.0f;
+		pVtx[2].rhw = 1.0f;
+		pVtx[3].rhw = 1.0f;
+
+		//頂点カラーの設定
+		pVtx[0].col = D3DCOLOR_RGBA(POLYGON_MAXCOL, POLYGON_MAXCOL, POLYGON_MAXCOL, POLYGON_MAXCOL);
+		pVtx[1].col = D3DCOLOR_RGBA(POLYGON_MAXCOL, POLYGON_MAXCOL, POLYGON_MAXCOL, POLYGON_MAXCOL);
+		pVtx[2].col = D3DCOLOR_RGBA(POLYGON_MAXCOL, POLYGON_MAXCOL, POLYGON_MAXCOL, POLYGON_MAXCOL);
+		pVtx[3].col = D3DCOLOR_RGBA(POLYGON_MAXCOL, POLYGON_MAXCOL, POLYGON_MAXCOL, POLYGON_MAXCOL);
+
+		//テスチャ座標の設定
+		pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
+		pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
+		pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
+		pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
+
+		pVtx += 4;
+	}
+
+	//配置しているとこ
+	for (nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
+	{
+		SetPauseSelect(D3DXVECTOR3((SCREEN_WIDTH / 4), (nCntPause * 300.0f) + 150.0f, 0.0f));
+	}
+
+	//頂点バッファをアンロックする
+	g_pVtxBuffPauseSL->Unlock();
 
 //==========================================================================================
 //ここから下までは選択出来るポリゴンの処理
@@ -222,7 +299,7 @@ void InitPause(void)
 	//配置しているとこ
 	for (nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
 	{
-		SetPause(D3DXVECTOR3((SCREEN_WIDTH / 4), (nCntPause * 200.0f) + 250.0f, 0.0f));
+		SetPause(D3DXVECTOR3((SCREEN_WIDTH / 4), (nCntPause * 300.0f) + 150.0f, 0.0f));
 	}
 
 	//頂点バッファをアンロックする
@@ -269,6 +346,26 @@ void UninitPause(void)
 	}
 
 //==================================================================================
+//区切られているところまで矢印のポリゴンの処理
+
+	for (int nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
+	{
+		//テクスチャの破棄
+		if (g_pTexturePauseSL[nCntPause] != NULL)
+		{
+			g_pTexturePauseSL[nCntPause]->Release();
+			g_pTexturePauseSL[nCntPause] = NULL;
+		}
+	}
+
+	//頂点バッファの破棄
+	if (g_pVtxBuffPauseSL != NULL)
+	{
+		g_pVtxBuffPauseSL->Release();
+		g_pVtxBuffPauseSL = NULL;
+	}
+
+//==================================================================================
 //ここから下までは選択出来るポリゴンの処理 
 
 	for (int nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
@@ -299,7 +396,13 @@ void UpdatePause(void)
 	//頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffPause->Lock(0, 0, (void**)&pVtx, 0);
 
-	//構造体のフラグを全てfalseにする
+	//矢印のポリゴンの構造体のフラグをfalseにする
+	for (int nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
+	{
+		g_pauseSL[nCntPause].bUse = false;
+	}
+
+	//選択出来るポリゴンの構造体のフラグを全てfalseにする
 	for (int nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
 	{
 		g_pause[nCntPause].bColUse = false;
@@ -309,28 +412,35 @@ void UpdatePause(void)
 	if (GetKeyboardTrigger(DIK_UP) == true || GetJoypadTrigger(JOYKEY_UP,0) == true)
 	{
 		g_nCntChoose--;		//カウントをマイナスする(上に進む)
+		g_nCntChooseSL--;	//上記と同じ(こちらは矢印のもの)
 	}
 
 	//↓キー押されたら
 	if (GetKeyboardTrigger(DIK_DOWN) == true || GetJoypadTrigger(JOYKEY_DOWN,0) == true)
 	{
 		g_nCntChoose++;		//カウントをプラスする(下に進む)
+		g_nCntChooseSL++;	//上記と同じ(こちらは矢印のもの)
 	}
 
 	//もしカウントが使用されているポリゴン数よりもマイナス値になってしまった時
 	if (g_nCntChoose <= -1)
 	{
 		g_nCntChoose = 2;	//強制的にカウントを2にする(retryからendにとばす)
+		g_nCntChooseSL = 2;	//上記と同じ(こちらは矢印のもの)
 	}
 
 	//もしカウントが使用されているポリゴン数よりもプラス値になってしまった時
 	if (g_nCntChoose >= 3)
 	{
 		g_nCntChoose = 0;	//強制的にカウントを0にする(endからretryにとばす)
+		g_nCntChooseSL = 0;	//上記と同じ(こちらは矢印のもの)
 	}
 
 	//選ばれたカウントの値のフラグをtrueにする
-	g_pause[g_nCntChoose].bColUse = true;
+	g_pause[g_nCntChoose].bColUse = true;		//選択出来るポリゴン
+
+	//選ばれたカウントの値のフラグをtrueにする
+	g_pauseSL[g_nCntChooseSL].bColUse = true;		//矢印のポリゴン
 
 	//ポリゴンの数分回してます
 	for (int nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
@@ -422,6 +532,40 @@ void DrawPause(void)
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 
 //==============================================================================================
+//区切られているところまで操作方法のポリゴンの処理
+
+	//頂点バッファをデータストリームに設定
+	pDevice->SetStreamSource(0, g_pVtxBuffPauseMN, 0, sizeof(VERTEX_2D));
+
+	//頂点フォーマットの設定
+	pDevice->SetFVF(FVF_VERTEX_2D);
+
+	//テクスチャの設定
+	pDevice->SetTexture(0, g_pTexturePauseMN);
+
+	//ポリゴンの描画
+	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+
+//==============================================================================================
+//区切られているところまで矢印のポリゴンの処理
+
+	//頂点バッファをデータストリームに設定
+	pDevice->SetStreamSource(0, g_pVtxBuffPauseSL, 0, sizeof(VERTEX_2D));
+
+	//頂点フォーマットの設定
+	pDevice->SetFVF(FVF_VERTEX_2D);
+
+	//選択できるポリゴンの最大数分回してます
+	for (int nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
+	{
+		//テクスチャの設定
+		pDevice->SetTexture(0, g_pTexturePauseSL[nCntPause]);		//テクスチャ三個分あります
+
+		//ポリゴンの描画
+		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, nCntPause * 4, 2);		//ポリゴン三つ分あります
+	}
+
+//==============================================================================================
 //ここから下までは選択出来るポリゴンの処理
 	
 	//頂点バッファをデータストリームに設定
@@ -439,21 +583,6 @@ void DrawPause(void)
 		//ポリゴンの描画
 		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, nCntPause * 4, 2);		//ポリゴン三つ分あります
 	}
-
-//==============================================================================================
-//区切られているところまで操作方法のポリゴンの処理
-
-	//頂点バッファをデータストリームに設定
-	pDevice->SetStreamSource(0, g_pVtxBuffPauseMN, 0, sizeof(VERTEX_2D));
-
-	//頂点フォーマットの設定
-	pDevice->SetFVF(FVF_VERTEX_2D);
-
-	//テクスチャの設定
-	pDevice->SetTexture(0, g_pTexturePauseMN);
-
-	//ポリゴンの描画
-	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 }
 
 //=====================================
@@ -511,8 +640,46 @@ void SetPauseMenu(D3DXVECTOR3 pos)
 		pVtx[1].pos = D3DXVECTOR3(g_pauseMN.pos.x + MNPOLYGON_WIDTH, g_pauseMN.pos.y - 0.0f, 0.0f);
 		pVtx[2].pos = D3DXVECTOR3(g_pauseMN.pos.x - MNPOLYGON_WIDTH, g_pauseMN.pos.y + MNPOLYGON_HEIGHT, 0.0f);
 		pVtx[3].pos = D3DXVECTOR3(g_pauseMN.pos.x + MNPOLYGON_WIDTH, g_pauseMN.pos.y + MNPOLYGON_HEIGHT, 0.0f);
+
+		g_pauseMN.bUse = true;
 	}
 
 	//頂点バッファをアンロックする
 	g_pVtxBuffPauseMN->Unlock();
+}
+
+//=====================================
+//矢印のポリゴンの設定処理
+//=====================================
+void SetPauseSelect(D3DXVECTOR3 pos)
+{
+	VERTEX_2D* pVtx;	//頂点情報へのポインタ
+
+	//頂点バッファをロックし、頂点情報へのポインタを取得
+	g_pVtxBuffPauseSL->Lock(0, 0, (void**)&pVtx, 0);
+
+	//選択できるポリゴンの最大数分回してます
+	for (int nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
+	{
+		if (g_pauseSL[nCntPause].bUse == false)
+		{
+			g_pauseSL[nCntPause].pos = pos;
+
+			//頂点座標の設定
+			pVtx[0].pos = D3DXVECTOR3(g_pauseSL[nCntPause].pos.x - SLPOLYGON_WIDTH, g_pauseSL[nCntPause].pos.y - 0.0f, 0.0f);
+			pVtx[1].pos = D3DXVECTOR3(g_pauseSL[nCntPause].pos.x + SLPOLYGON_WIDTH, g_pauseSL[nCntPause].pos.y - 0.0f, 0.0f);
+			pVtx[2].pos = D3DXVECTOR3(g_pauseSL[nCntPause].pos.x - SLPOLYGON_WIDTH, g_pauseSL[nCntPause].pos.y + SLPOLYGON_HEIGHT, 0.0f);
+			pVtx[3].pos = D3DXVECTOR3(g_pauseSL[nCntPause].pos.x + SLPOLYGON_WIDTH, g_pauseSL[nCntPause].pos.y + SLPOLYGON_HEIGHT, 0.0f);
+
+			g_pauseSL[nCntPause].bUse = true;
+			g_pauseSL[nCntPause].bColUse = false;
+
+			break;
+		}
+
+		pVtx += 4;
+	}
+
+	//頂点バッファをアンロックする
+	g_pVtxBuffPauseSL->Unlock();
 }
