@@ -40,7 +40,8 @@ typedef struct
 //=====================================
 typedef struct
 {
-	D3DXVECTOR3 pos;	//動き(普通)
+	D3DXVECTOR3 pos;	//位置(普通)
+	D3DXVECTOR3 move;	//動き(普通)
 	int nType;			//モードの種類
 	bool bUse;			//使用の有無
 	bool bColUse;		//ポリゴンのカラーの有無

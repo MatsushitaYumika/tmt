@@ -10,6 +10,7 @@
 #include "input.h"	//キーボードの宣言の複合体
 #include "Pause.h"	//ゲーム画面の宣言の複合体
 #include "player.h"
+#include "debugproc.h"
 //#include "fade.h"
 
 //=====================================
@@ -41,10 +42,13 @@ LPDIRECT3DVERTEXBUFFER9	g_pVtxBuffPauseMN = NULL;		//頂点バッファへのポインタ
 PauseMN g_pauseMN;										//操作方法のポリゴンの構造体
 
 //矢印(SL = select)
-LPDIRECT3DTEXTURE9	g_pTexturePauseSL = NULL;//テクスチャへのポインタ
+LPDIRECT3DTEXTURE9	g_pTexturePauseSL = NULL;			//テクスチャへのポインタ
 LPDIRECT3DVERTEXBUFFER9	g_pVtxBuffPauseSL = NULL;		//頂点バッファへのポインタ
 PauseSL g_pauseSL[MAX_POLYGON];							//矢印ポリゴンの構造体
-int g_nCntChooseSL = 0;									//選択されたポリゴンを光らせる為のカウント
+int g_nCntChooseSL = 0;									//矢印のポリゴンを光らせる為のカウント
+int g_Time = 0;											//矢印のポリゴンを動かすためのカウント
+int g_nCntSL = 0;										//矢印のポリゴンをずらしていくためのカウント
+bool bg_SL = false;
 
 //選択できるやつ
 LPDIRECT3DTEXTURE9	g_pTexturePause[MAX_POLYGON] = {};	//テクスチャへのポインタ
@@ -172,12 +176,15 @@ void InitPause(void)
 	for (nCntPause = 0; nCntPause < MAX_POLYGON; nCntPause++)
 	{
 		g_pauseSL[nCntPause].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_pauseSL[nCntPause].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_pauseSL[nCntPause].nType = 0;
 		g_pauseSL[nCntPause].bUse = false;
 		g_pauseSL[nCntPause].bColUse = false;
 	}
 
 	g_nCntChooseSL = 0;
+	g_Time = 0;
+	g_nCntSL = 0;
 
 	//頂点バッファの生成
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4 * MAX_POLYGON,
@@ -456,7 +463,7 @@ void UpdatePause(void)
 	}
 
 	//プレイヤーの数ぶん回してます
-	for (int nCntPause = 0; nCntPause < MAX_PL; nCntPause++)
+	for (int nCntPause = 0; nCntPause < MAX_PL; nCntPause++)	//タイトルで選択した参加人数を返したのをMAX_PLのとこにいれてください
 	{
 		//もしポリゴンの0番が選ばれた場合
 		if (g_pause[0].bColUse == true)
@@ -498,6 +505,7 @@ void UpdatePause(void)
 //==========================================================================================
 //ここから下までは矢印のポリゴンの処理
 
+	g_Time++;
 	//頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffPauseSL->Lock(0, 0, (void**)&pVtx, 0);
 
@@ -533,8 +541,32 @@ void UpdatePause(void)
 			pVtx[3].col = D3DCOLOR_RGBA(POLYGON_MAXCOL, POLYGON_MAXCOL, POLYGON_MAXCOL, POLYGON_MAXCOL);
 		}
 
+		if (g_Time % 60 == 0)
+		{
+			bg_SL = bg_SL ? false : true;
+		}
+
+		if (bg_SL == true)
+		{
+			g_pauseSL[nCntPauseSL].move.x = 1.0f;
+		}
+		if (bg_SL == false)
+		{
+			g_pauseSL[nCntPauseSL].move.x = -1.0f;
+		}
+
+		g_pauseSL[nCntPauseSL].pos += g_pauseSL[nCntPauseSL].move;
+
+		//頂点座標の設定
+		pVtx[0].pos = D3DXVECTOR3(g_pauseSL[nCntPauseSL].pos.x - SLPOLYGON_WIDTH, g_pauseSL[nCntPauseSL].pos.y - 0.0f, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(g_pauseSL[nCntPauseSL].pos.x + SLPOLYGON_WIDTH, g_pauseSL[nCntPauseSL].pos.y - 0.0f, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(g_pauseSL[nCntPauseSL].pos.x - SLPOLYGON_WIDTH, g_pauseSL[nCntPauseSL].pos.y + SLPOLYGON_HEIGHT, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(g_pauseSL[nCntPauseSL].pos.x + SLPOLYGON_WIDTH, g_pauseSL[nCntPauseSL].pos.y + SLPOLYGON_HEIGHT, 0.0f);
+
+
 		pVtx += 4;			//いつもの
 	}
+
 
 	//頂点バッファをアンロックする
 	g_pVtxBuffPauseSL->Unlock();
@@ -695,6 +727,8 @@ void SetPauseSelect(D3DXVECTOR3 pos)
 		if (g_pauseSL[nCntPause].bUse == false)
 		{
 			g_pauseSL[nCntPause].pos = pos;
+			g_pauseSL[nCntPause].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
 
 			//頂点座標の設定
 			pVtx[0].pos = D3DXVECTOR3(g_pauseSL[nCntPause].pos.x - SLPOLYGON_WIDTH, g_pauseSL[nCntPause].pos.y - 0.0f, 0.0f);
